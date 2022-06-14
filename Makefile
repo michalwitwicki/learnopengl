@@ -11,7 +11,10 @@ CFLAGS += 	-I deps/GLFW/include \
 			-I deps/GLAD/include \
 			-I deps/linmath/include
 
-LDFLAGS += -L deps/GLFW -lglfw3 -lgdi32 -lopengl32
+LDFLAGS += 	-L deps/GLFW \
+			-lglfw3 \
+			-lgdi32 \
+			-lopengl32
 
 SRC = deps/GLAD/src/gl.c
 
