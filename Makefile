@@ -19,7 +19,10 @@ LDFLAGS += 	-L deps/GLFW \
 SRC = deps/GLAD/src/gl.c
 
 # --- PROJECT FILES ---
-SRC += src/main.c 
+SRC += 	src/main.c \
+		src/game.c \
+		src/window.c
+
 OBJ := $(SRC:%.c=$(BIN_DIR)/%.o)
 
 .PHONY: all clean build run

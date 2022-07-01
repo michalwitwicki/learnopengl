@@ -6,93 +6,38 @@
 #include <stdio.h>
 #include <math.h>
 
-static void error_callback(int error, const char *description)
-{
-    fprintf(stderr, "Error: %s\n", description);
-}
-
-static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    }
-    else if (key == GLFW_KEY_1 && action == GLFW_PRESS)
-    {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    }
-    else if (key == GLFW_KEY_2 && action == GLFW_PRESS)
-    {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-    else if (key == GLFW_KEY_3 && action == GLFW_PRESS)
-    {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-    }
-}
-
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-void framebuffer_size_callback(GLFWwindow *window, int width, int height)
-{
-    // make sure the viewport matches the new window dimensions; note that width and
-    // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
-}
+#include "window.h"
+#include "game.h"
 
 int main()
 {
+    struct Game game;
+    initGame(&game);
+
     // --- GLFW setup ---
-    glfwSetErrorCallback(error_callback);
-
-    if (!glfwInit())
-    {
-        exit(EXIT_FAILURE);
-    }
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-
-    GLFWwindow *window = glfwCreateWindow(640, 480, "My Title", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-
-    glfwSetKeyCallback(window, key_callback);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-    glfwMakeContextCurrent(window);
-    if (!gladLoadGL(glfwGetProcAddress))
-    {
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-
-    glfwSwapInterval(1);
-
     // --- shaders stuff ---
-    const char *vertexShaderSource = "#version 330 core\n"
-                                     "layout (location = 0) in vec3 aPos;\n"
-                                     "layout (location = 1) in vec3 aColor;\n"
-                                     "out vec3 ourColor;\n"
-                                     "void main()\n"
-                                     "{\n"
-                                     "   gl_Position = vec4(aPos, 1.0);\n"
-                                     "   ourColor = aColor;\n"
-                                     "}\0";
+    // initShaders();
+    const char* vertexShaderSource = "#version 330 core\n"
+        "layout (location = 0) in vec3 aPos;\n"
+        "layout (location = 1) in vec3 aColor;\n"
+        "out vec3 ourColor;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position = vec4(aPos, 1.0);\n"
+        "   ourColor = aColor;\n"
+        "}\0";
 
-    const char *fragmentShaderSource = "#version 330\n"
-                                       "out vec4 FragColor;\n"
-                                       "in vec3 ourColor;\n"
-                                       //    "uniform vec4 ourColor;\n"
-                                       "void main()\n"
-                                       "{\n"
-                                       "    FragColor = vec4(ourColor, 1.0f);\n"
-                                       //    "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-                                       //    "    FragColor = vertexColor;\n"
-                                       //    "    FragColor = ourColor;\n"
-                                       "}\0";
+    const char* fragmentShaderSource = "#version 330\n"
+        "out vec4 FragColor;\n"
+        "in vec3 ourColor;\n"
+        //    "uniform vec4 ourColor;\n"
+        "void main()\n"
+        "{\n"
+        "    FragColor = vec4(ourColor, 1.0f);\n"
+        //    "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+        //    "    FragColor = vertexColor;\n"
+        //    "    FragColor = ourColor;\n"
+        "}\0";
 
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -178,11 +123,11 @@ int main()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     // unbind VBO and VAO
@@ -190,7 +135,7 @@ int main()
     glBindVertexArray(0);
 
     // --- main loop ---
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(game->window->glfwWindow))
     {
         // clear the colorbuffer
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
