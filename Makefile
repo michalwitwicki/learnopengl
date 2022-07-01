@@ -33,7 +33,8 @@ $(BIN_DIR)/%.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 # --- UTILS ---
-all: clean build run
+all: build run
+call: clean build run
 
 clean:
 	rm -rf ./$(BIN_DIR)
