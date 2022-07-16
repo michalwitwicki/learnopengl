@@ -135,14 +135,15 @@ int main()
     glBindVertexArray(0);
 
     // --- main loop ---
-    while (!glfwWindowShouldClose(game->window->glfwWindow))
+    // while (!glfwWindowShouldClose(game->window->glfwWindow))
+    while (!glfwWindowShouldClose(game.window.glfwWindow))
     {
         // clear the colorbuffer
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // be sure to activate the shader
-        glUseProgram(shaderProgram);
+        //glUseProgram(shaderProgram);
 
         // update the uniform color
         // float timeValue = glfwGetTime();
@@ -156,7 +157,7 @@ int main()
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // swap buffers and poll IO events
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(game.window.glfwWindow);
         glfwPollEvents();
     }
 
@@ -166,7 +167,7 @@ int main()
     // glDeleteBuffers(1, &EBO);
     glDeleteProgram(shaderProgram);
 
-    glfwDestroyWindow(window);
+    glfwDestroyWindow(game.window.glfwWindow);
     glfwTerminate();
     return 0;
 }
