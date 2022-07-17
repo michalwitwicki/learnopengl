@@ -3,6 +3,7 @@
 
 #include "window.h"
 #include "shader.h"
+#include "renderer.h"
 
 struct Game
 {
