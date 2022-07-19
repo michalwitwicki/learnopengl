@@ -1,16 +1,16 @@
 #ifndef _SHADER_H_
 #define _SHADER_H_
 
-enum ShaderFragmentType
-{
-    SHADER_FRAGMENT_BASIC = 0,
-    SHADER_FRAGMENT_COUNT
-};
-
 enum ShaderVertexType
 {
     SHADER_VERTEX_BASIC = 0,
     SHADER_VERTEX_COUNT
+};
+
+enum ShaderFragmentType
+{
+    SHADER_FRAGMENT_BASIC = 0,
+    SHADER_FRAGMENT_COUNT
 };
 
 enum ShaderProgramType
@@ -21,10 +21,9 @@ enum ShaderProgramType
 
 struct Shaders
 {
-    unsigned int fragmentShaders[SHADER_FRAGMENT_COUNT];
     unsigned int vertexShaders[SHADER_VERTEX_COUNT];
+    unsigned int fragmentShaders[SHADER_FRAGMENT_COUNT];
     unsigned int shaderPrograms[SHADER_FRAGMENT_COUNT];
-    unsigned int shaderProgram;
 };
 
 void shadersInit();

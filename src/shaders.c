@@ -1,7 +1,10 @@
 #include <gl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "shaders.h"
+
+#define DEFAULT_SHADER_PROGRAM SHADER_PROGRAM_BASIC
 
 static char* readShaderSource(const char* sourcePath)
 {
@@ -26,49 +29,87 @@ static char* readShaderSource(const char* sourcePath)
     return buffer;
 }
 
-void shadersInit(struct Shaders* shaders)
+static unsigned int compileShader(uint16_t shaderType, const char* shaderSourcePath)
 {
-    const char* vertexShaderSource = readShaderSource("shaders/shader_fragment_basic.glsl");
-    const char* fragmentShaderSource = readShaderSource("shaders/shader_vertex_basic.glsl");
-
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-
     int success;
     char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    const char* buffer = readShaderSource(shaderSourcePath);
+    unsigned int shaderID = glCreateShader(shaderType);
+
+    glShaderSource(shaderID, 1, &buffer, NULL);
+    glCompileShader(shaderID);
+
+    glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);
     if (!success)
     {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        printf("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n %s\n", infoLog);
-    }
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n %s\n", infoLog);
+        glGetShaderInfoLog(shaderID, 512, NULL, infoLog);
+        printf("SHADER COMPILATION ERROR!!!\n");
+        printf("In file: \n %s \n %s \n", shaderSourcePath, infoLog);
     }
 
-    // unsigned int shaderProgram;
-    shaders->shaderProgram = glCreateProgram();
-    glAttachShader(shaders->shaderProgram, vertexShader);
-    glAttachShader(shaders->shaderProgram, fragmentShader);
-    glLinkProgram(shaders->shaderProgram);
+    free((char*)buffer);
 
-    glGetProgramiv(shaders->shaderProgram, GL_LINK_STATUS, &success);
+    return shaderID;
+}
+
+static void compileShaders(struct Shaders* shaders)
+{
+    // Declare paths to the shaders files
+    char* vertexShadersSourcesPath[] =
+    {
+        "shaders/shader_vertex_basic.glsl"
+    };
+
+    char* fragmentShadersSourcesPath[] =
+    {
+        "shaders/shader_fragment_basic.glsl"
+    };
+
+    // Compile vertex shaders
+    for (uint32_t i = 0; i < SHADER_VERTEX_COUNT; i++)
+    {
+        shaders->vertexShaders[i] = compileShader(GL_VERTEX_SHADER, vertexShadersSourcesPath[i]);
+    }
+
+    // Compile fragment shaders
+    for (uint32_t i = 0; i < SHADER_FRAGMENT_COUNT; i++)
+    {
+        shaders->fragmentShaders[i] = compileShader(GL_FRAGMENT_SHADER, fragmentShadersSourcesPath[i]);
+    }
+}
+
+static void linkShaderPrograms(struct Shaders* shaders)
+{
+    int success;
+    char infoLog[512];
+
+    shaders->shaderPrograms[SHADER_PROGRAM_BASIC] = glCreateProgram();
+    glAttachShader(shaders->shaderPrograms[SHADER_PROGRAM_BASIC], shaders->vertexShaders[SHADER_VERTEX_BASIC]);
+    glAttachShader(shaders->shaderPrograms[SHADER_PROGRAM_BASIC], shaders->fragmentShaders[SHADER_FRAGMENT_BASIC]);
+    glLinkProgram(shaders->shaderPrograms[SHADER_PROGRAM_BASIC]);
+
+    glGetProgramiv(shaders->shaderPrograms[SHADER_PROGRAM_BASIC], GL_LINK_STATUS, &success);
     if (!success)
     {
-        glGetProgramInfoLog(shaders->shaderProgram, 512, NULL, infoLog);
-        printf("ERROR::LINKING_FAILED\n %s\n", infoLog);
+        glGetProgramInfoLog(shaders->shaderPrograms[SHADER_PROGRAM_BASIC], 512, NULL, infoLog);
+        printf("SHADER PROGRAM LINKING ERROR!!!\n %s\n", infoLog);
     }
-    glUseProgram(shaders->shaderProgram);
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+
+    glUseProgram(shaders->shaderPrograms[DEFAULT_SHADER_PROGRAM]);
+
+    glDeleteShader(shaders->vertexShaders[SHADER_VERTEX_BASIC]);
+    glDeleteShader(shaders->fragmentShaders[SHADER_FRAGMENT_BASIC]);
+}
+
+void shadersUseProgram(struct Shaders* shaders, enum ShaderProgramType shaderProgramType)
+{
+    glUseProgram(shaders->shaderPrograms[shaderProgramType]);
+}
+
+
+void shadersInit(struct Shaders* shaders)
+{
+    compileShaders(shaders);
+    linkShaderPrograms(shaders);
+    shadersUseProgram(shaders, DEFAULT_SHADER_PROGRAM);
 }
