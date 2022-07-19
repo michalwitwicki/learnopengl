@@ -1,7 +1,9 @@
+
 #include "renderer.h"
+#include "shaders.h"
 
-
-void initRenderer()
+// --- shaders stuff ---
+void rendererInit(struct Renderer* renderer)
 {
-
+    shadersInit();
 }

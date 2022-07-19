@@ -9,6 +9,6 @@ struct Window
     GLFWwindow* glfwWindow;
 };
 
-void initWindow(struct Window* window);
+void windowInit(struct Window* window);
 
 #endif // _WINDOW_H_

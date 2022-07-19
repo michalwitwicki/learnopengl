@@ -22,6 +22,7 @@ SRC = deps/GLAD/src/gl.c
 SRC += 	src/main.c \
 		src/game.c \
 		src/renderer.c \
+		src/shaders.c \
 		src/window.c
 
 OBJ := $(SRC:%.c=$(BIN_DIR)/%.o)

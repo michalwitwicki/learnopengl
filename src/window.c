@@ -1,12 +1,12 @@
 #include "window.h"
 
 #include <gl.h>
-#define GLFW_INCLUDE_NONE
-#include <glfw3.h>
+// #define GLFW_INCLUDE_NONE
+// #include <glfw3.h>
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
+// // #include <math.h>
 
 static void error_callback(int error, const char* description)
 {
@@ -41,7 +41,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void initWindow(struct Window* window)
+// --- GLFW setup ---
+void windowInit(struct Window* window)
 {
     glfwSetErrorCallback(error_callback);
 

@@ -1,11 +1,11 @@
 #ifndef _RENDERER_H_
 #define _RENDERER_H_
 
-// struct Renderer
-// {
-//     /* data */
-// };
+struct Renderer
+{
+    unsigned int shaderProgram;
+};
 
-void initRenderer();
+void rendererInit(struct Renderer* renderer);
 
 #endif // _RENDERER_H_
