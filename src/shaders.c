@@ -95,8 +95,6 @@ static void linkShaderPrograms(struct Shaders* shaders)
         printf("SHADER PROGRAM LINKING ERROR!!!\n %s\n", infoLog);
     }
 
-    glUseProgram(shaders->shaderPrograms[DEFAULT_SHADER_PROGRAM]);
-
     glDeleteShader(shaders->vertexShaders[SHADER_VERTEX_BASIC]);
     glDeleteShader(shaders->fragmentShaders[SHADER_FRAGMENT_BASIC]);
 }
@@ -104,8 +102,17 @@ static void linkShaderPrograms(struct Shaders* shaders)
 void shadersUseProgram(struct Shaders* shaders, enum ShaderProgramType shaderProgramType)
 {
     glUseProgram(shaders->shaderPrograms[shaderProgramType]);
+    shaders->activeShaderProgram = &shaders->shaderPrograms[shaderProgramType];
 }
 
+void deleteShaderPrograms(struct Shaders* shaders)
+{
+    // Delete all programs
+    for (uint32_t i = 0; i < SHADER_PROGRAM_COUNT; i++)
+    {
+        glDeleteProgram(shaders->shaderPrograms[i]);
+    }
+}
 
 void shadersInit(struct Shaders* shaders)
 {

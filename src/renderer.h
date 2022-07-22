@@ -1,9 +1,10 @@
 #ifndef _RENDERER_H_
 #define _RENDERER_H_
 
+#include "shaders.h"
 struct Renderer
 {
-    unsigned int shaderProgram;
+    struct Shaders shaders;
 };
 
 void rendererInit(struct Renderer* renderer);

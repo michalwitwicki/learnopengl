@@ -24,9 +24,12 @@ struct Shaders
     unsigned int vertexShaders[SHADER_VERTEX_COUNT];
     unsigned int fragmentShaders[SHADER_FRAGMENT_COUNT];
     unsigned int shaderPrograms[SHADER_FRAGMENT_COUNT];
+    unsigned int* activeShaderProgram;
 };
 
+void shadersUseProgram(struct Shaders* shaders, enum ShaderProgramType shaderProgramType);
 void shadersInit();
+void deleteShaderPrograms(struct Shaders* shaders);
 
 #endif //_SHADER_H_
 
