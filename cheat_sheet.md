@@ -51,3 +51,8 @@ glBindVertexArray(VAO)
 glDeleteVertexArrays(1, &VAO)
 glDeleteBuffers(1, &VBO)
 glDeleteProgram(shaderProgram)
+
+
+## Links to check:
+
+https://gamedev.stackexchange.com/questions/92832/in-opengl-whats-quicker-lots-of-smaller-vaos-or-one-large-one-updated-each-fr

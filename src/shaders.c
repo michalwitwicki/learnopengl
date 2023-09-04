@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+
 #include "shaders.h"
+// #include "linmath.h"
 
 #define DEFAULT_SHADER_PROGRAM SHADER_PROGRAM_BASIC
 

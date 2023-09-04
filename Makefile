@@ -9,21 +9,28 @@ OUT_NAME = out.exe
 CFLAGS += 	-I deps/GLFW/include \
 			-I deps/GLAD/include/KHR \
 			-I deps/GLAD/include \
-			-I deps/linmath/include
+			-I deps/stb \
+			-I deps/cglm
+#		-I deps/linmath/include
 
 LDFLAGS += 	-L deps/GLFW \
 			-lglfw3 \
 			-lgdi32 \
 			-lopengl32
 
-SRC = deps/GLAD/src/gl.c
+SRC += 	deps/GLAD/src/gl.c \
+		deps/stb/stb_image.c
 
 # --- PROJECT FILES ---
 SRC += 	src/main.c \
 		src/game.c \
 		src/renderer.c \
 		src/shaders.c \
-		src/window.c
+		src/window.c \
+		src/buffer.c \
+		src/bufferLayout.c \
+		src/vertexArray.c \
+		src/texture.c
 
 OBJ := $(SRC:%.c=$(BIN_DIR)/%.o)
 
